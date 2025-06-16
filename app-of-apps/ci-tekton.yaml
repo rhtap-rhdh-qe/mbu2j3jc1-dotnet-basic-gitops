@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mbu2j3jc1-dotnet-basic-ci
+  namespace: tssc-gitops
+  finalizers: ["resources-finalizer.argocd.argoproj.io"]
+spec:
+  project: default
+  source:
+    path: ./components/mbu2j3jc1-dotnet-basic/overlays/ci
+    repoURL: https://github.com/rhtap-rhdh-qe/mbu2j3jc1-dotnet-basic-gitops.git
+    targetRevision: main
+  destination:
+    namespace: tssc-app-ci
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        argocd.argoproj.io/managed-by: tssc-gitops
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
